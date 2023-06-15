@@ -48,4 +48,43 @@ public class AuthenticationService {
                 .token(jwtToken)
                 .build();
     }
+
+    // ACCORDING TO SPEC:
+
+    public LoginResponse login(LoginRequest request) {
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.getEmail(),
+                        request.getPassword()
+                )
+        );
+        var user = repository.findByEmail(request.getEmail())
+                .orElseThrow();
+        var jwtToken = jwtService.generateToken(user);
+        return LoginResponse.builder()
+                .email(user.getEmail())
+                .token(jwtToken)
+                .username(user.getUsername())
+                .bio(user.getBio())
+                .image(user.getImage())
+                .build();
+    }
+
+    public LoginResponse registerUser(RegistrationRequest request) {
+        var user = User.builder()
+                .username(request.getUsername())
+                .email(request.getEmail())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .role(Role.USER)
+                .build();
+        repository.save(user);
+        var jwtToken = jwtService.generateToken(user);
+        return LoginResponse.builder()
+                .email(user.getEmail())
+                .token(jwtToken)
+                .username(user.getUsername())
+                .bio(user.getBio())
+                .image(user.getImage())
+                .build();
+    }
 }

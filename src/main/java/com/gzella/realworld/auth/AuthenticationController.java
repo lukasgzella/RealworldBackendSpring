@@ -2,10 +2,7 @@ package com.gzella.realworld.auth;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -28,4 +25,26 @@ public class AuthenticationController {
         return ResponseEntity.ok(authenticationService.authenticate(request));
     }
 
+//    spec endpoints - authentication, registration
+
+//    auth permitAll
+    @PostMapping("/api/users/login")
+    public ResponseEntity<LoginResponse> login(
+            @RequestBody LoginRequest request
+    ) {
+        return ResponseEntity.ok(authenticationService.login(request));
+    }
+
+//    registration permitAll
+    @PostMapping("/api/users")
+    public ResponseEntity<LoginResponse> registerUser(
+            @RequestBody RegistrationRequest request
+    ) {
+        return ResponseEntity.ok(authenticationService.registerUser(request));
+    }
+//   todo get current user auth required
+//    @GetMapping
+//    public ResponseEntity<> currentUser(
+//            @RequestBody
+//    )
 }
