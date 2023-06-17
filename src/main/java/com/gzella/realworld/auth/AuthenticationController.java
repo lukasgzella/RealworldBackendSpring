@@ -27,7 +27,7 @@ public class AuthenticationController {
 
 //    spec endpoints - authentication, registration
 
-//    auth permitAll
+    //    auth permitAll
     @PostMapping("/api/users/login")
     public ResponseEntity<LoginResponse> login(
             @RequestBody LoginRequest request
@@ -35,16 +35,25 @@ public class AuthenticationController {
         return ResponseEntity.ok(authenticationService.login(request));
     }
 
-//    registration permitAll
+    //    registration permitAll
     @PostMapping("/api/users")
     public ResponseEntity<LoginResponse> registerUser(
             @RequestBody RegistrationRequest request
     ) {
         return ResponseEntity.ok(authenticationService.registerUser(request));
     }
-//   todo get current user auth required
-//    @GetMapping
-//    public ResponseEntity<> currentUser(
-//            @RequestBody
-//    )
+
+    //    auth required
+    @GetMapping("/api/user")
+    public ResponseEntity<LoginResponse> currentUser() {
+        return ResponseEntity.ok(authenticationService.getCurrentUser());
+    }
+
+    //    auth required
+    @PutMapping("/api/user")
+    public ResponseEntity<LoginResponse> updateUser(
+            @RequestBody RegistrationRequest request
+    ) {
+        return ResponseEntity.ok(authenticationService.registerUser(request));
+    }
 }

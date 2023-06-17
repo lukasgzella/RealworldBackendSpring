@@ -7,6 +7,8 @@ import com.gzella.realworld.persistence.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -78,6 +80,19 @@ public class AuthenticationService {
                 .role(Role.USER)
                 .build();
         repository.save(user);
+        var jwtToken = jwtService.generateToken(user);
+        return LoginResponse.builder()
+                .email(user.getEmail())
+                .token(jwtToken)
+                .username(user.getUsername())
+                .bio(user.getBio())
+                .image(user.getImage())
+                .build();
+    }
+    public LoginResponse getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentPrincialName = authentication.getName();
+        var user = repository.findByEmail(currentPrincialName).orElseThrow();
         var jwtToken = jwtService.generateToken(user);
         return LoginResponse.builder()
                 .email(user.getEmail())
