@@ -52,8 +52,8 @@ public class AuthenticationController {
     //    auth required
     @PutMapping("/api/user")
     public ResponseEntity<LoginResponse> updateUser(
-            @RequestBody RegistrationRequest request
+            @RequestBody UpdateRequest request
     ) {
-        return ResponseEntity.ok(authenticationService.registerUser(request));
+        return ResponseEntity.ok(authenticationService.updateUser(request));
     }
 }

@@ -32,7 +32,7 @@ public class AuthenticationService {
         var jwtToken = jwtService.generateToken(user);
         return AuthenticationResponse.builder()
                 .token(jwtToken)
-                 .build();
+                .build();
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
@@ -89,10 +89,9 @@ public class AuthenticationService {
                 .image(user.getImage())
                 .build();
     }
+
     public LoginResponse getCurrentUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentPrincialName = authentication.getName();
-        var user = repository.findByEmail(currentPrincialName).orElseThrow();
+        var user = retrieveCurrentUserFromDb();
         var jwtToken = jwtService.generateToken(user);
         return LoginResponse.builder()
                 .email(user.getEmail())
@@ -102,4 +101,58 @@ public class AuthenticationService {
                 .image(user.getImage())
                 .build();
     }
+
+    public LoginResponse updateUser(UpdateRequest request) {
+        var user = retrieveCurrentUserFromDb();
+
+        if (isEmailNotUnique(user.getEmail(),request.getEmail())) {
+            throw new IllegalArgumentException("Provided email already exists");
+        }
+        if (isUsernameNotUnique(user.getUsername(),request.getUsername())) {
+            throw new IllegalArgumentException("Provided username already exists");
+        }
+
+        repository.save(updateRequestedFields(user, request));
+
+        return LoginResponse.builder()
+                .email(updatedUser.getEmail())
+                .token(jwtToken)
+                .username(user.getUsername())
+                .bio(user.getBio())
+                .image(user.getImage())
+                .build();
+    }
+    private User updateRequestedFields(User user, UpdateRequest request) {
+        if (request.getEmail() != null) {
+            user.setEmail(request.getEmail());
+        }
+        if (request.getUsername() != null) {
+            user.setUsername(request.getUsername());
+        }
+        if (request.getPassword() != null) {
+            user.setPassword(passwordEncoder.encode(request.getPassword()));
+        }
+        if (request.getImage() != null) {
+            user.setImage(request.getImage());
+        }
+        if (request.getBio() != null) {
+            user.setBio(request.getBio());
+        }
+        return user;
+    }
+
+    private boolean isEmailNotUnique(String email, String newEmail) {
+        return repository.existsByEmail(newEmail) && !email.equals(newEmail);
+    }
+
+    private boolean isUsernameNotUnique(String username, String newUsername) {
+        return repository.existsByUsername(newUsername) && !username.equals(newUsername);
+    }
+
+    private User retrieveCurrentUserFromDb() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentPrincialName = authentication.getName();
+        return repository.findByEmail(currentPrincialName).orElseThrow();
+    }
+
 }
