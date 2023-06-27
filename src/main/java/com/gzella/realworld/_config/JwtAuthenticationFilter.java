@@ -1,4 +1,4 @@
-package com.gzella.realworld.config;
+package com.gzella.realworld._config;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

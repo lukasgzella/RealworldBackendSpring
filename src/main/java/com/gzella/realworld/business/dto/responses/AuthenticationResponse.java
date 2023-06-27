@@ -1,4 +1,4 @@
-package com.gzella.realworld.auth;
+package com.gzella.realworld.business.dto.responses;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

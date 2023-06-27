@@ -1,4 +1,4 @@
-package com.gzella.realworld.auth;
+package com.gzella.realworld.business.dto.responses;
 
 import com.fasterxml.jackson.annotation.JsonRootName;
 import lombok.AllArgsConstructor;
@@ -10,13 +10,12 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonRootName("user")
-public class LoginResponse {
+@JsonRootName("profile")
+public class ProfileResponse {
 
-    private String email;
-    private String token;
     private String username;
     private String bio;
     private String image;
+    private String following; //boolean
 
 }

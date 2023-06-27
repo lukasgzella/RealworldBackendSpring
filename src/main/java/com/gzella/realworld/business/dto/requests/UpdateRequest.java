@@ -1,4 +1,4 @@
-package com.gzella.realworld.auth;
+package com.gzella.realworld.business.dto.requests;
 
 import com.fasterxml.jackson.annotation.JsonRootName;
 import lombok.AllArgsConstructor;

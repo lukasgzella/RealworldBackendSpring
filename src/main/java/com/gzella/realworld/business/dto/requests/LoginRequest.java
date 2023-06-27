@@ -1,5 +1,6 @@
-package com.gzella.realworld.auth;
+package com.gzella.realworld.business.dto.requests;
 
+import com.fasterxml.jackson.annotation.JsonRootName;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,7 +10,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthenticationRequest {
+@JsonRootName("user")
+public class LoginRequest {
 
     private String email;
     private String password;

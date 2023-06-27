@@ -1,9 +1,14 @@
-package com.gzella.realworld.auth;
+package com.gzella.realworld.business.service;
 
-import com.gzella.realworld.config.JwtService;
+import com.gzella.realworld._config.JwtService;
+import com.gzella.realworld.business.dto.requests.LoginRequest;
+import com.gzella.realworld.business.dto.requests.RegistrationRequest;
+import com.gzella.realworld.business.dto.requests.UpdateRequest;
+import com.gzella.realworld.business.dto.responses.LoginResponse;
 import com.gzella.realworld.persistence.entity.user.Role;
 import com.gzella.realworld.persistence.entity.user.User;
 import com.gzella.realworld.persistence.repository.UserRepository;
+import com.gzella.realworld.presentation.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,36 +25,6 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
-
-    public AuthenticationResponse register(RegisterRequest request) {
-        var user = User.builder()
-                .username(request.getUsername())
-                .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .role(Role.USER)
-                .build();
-        repository.save(user);
-        var jwtToken = jwtService.generateToken(user);
-        return AuthenticationResponse.builder()
-                .token(jwtToken)
-                .build();
-    }
-
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
-                        request.getPassword()
-                )
-        );
-        var user = repository.findByEmail(request.getEmail())
-                .orElseThrow();
-        // todo specify exception
-        var jwtToken = jwtService.generateToken(user);
-        return AuthenticationResponse.builder()
-                .token(jwtToken)
-                .build();
-    }
 
     // ACCORDING TO SPEC:
 
@@ -112,16 +87,18 @@ public class AuthenticationService {
             throw new IllegalArgumentException("Provided username already exists");
         }
 
-        repository.save(updateRequestedFields(user, request));
+        User updatedUser = repository.save(updateRequestedFields(user, request));
 
+        var jwtToken = jwtService.generateToken(user);
         return LoginResponse.builder()
                 .email(updatedUser.getEmail())
                 .token(jwtToken)
-                .username(user.getUsername())
-                .bio(user.getBio())
-                .image(user.getImage())
+                .username(updatedUser.getUsername())
+                .bio(updatedUser.getBio())
+                .image(updatedUser.getImage())
                 .build();
     }
+
     private User updateRequestedFields(User user, UpdateRequest request) {
         if (request.getEmail() != null) {
             user.setEmail(request.getEmail());

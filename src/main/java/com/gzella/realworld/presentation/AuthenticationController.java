@@ -1,5 +1,10 @@
-package com.gzella.realworld.auth;
+package com.gzella.realworld.presentation;
 
+import com.gzella.realworld.business.dto.requests.LoginRequest;
+import com.gzella.realworld.business.dto.requests.RegistrationRequest;
+import com.gzella.realworld.business.dto.requests.UpdateRequest;
+import com.gzella.realworld.business.dto.responses.LoginResponse;
+import com.gzella.realworld.business.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,20 +15,6 @@ import org.springframework.web.bind.annotation.*;
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
-
-    @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponse> register(
-            @RequestBody RegisterRequest request
-    ) {
-        return ResponseEntity.ok(authenticationService.register(request));
-    }
-
-    @PostMapping("/authenticate")
-    public ResponseEntity<AuthenticationResponse> authenticate(
-            @RequestBody AuthenticationRequest request
-    ) {
-        return ResponseEntity.ok(authenticationService.authenticate(request));
-    }
 
 //    spec endpoints - authentication, registration
 

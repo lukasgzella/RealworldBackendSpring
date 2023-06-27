@@ -1,4 +1,4 @@
-package com.gzella.realworld.config;
+package com.gzella.realworld._config;
 
 import com.gzella.realworld.persistence.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
