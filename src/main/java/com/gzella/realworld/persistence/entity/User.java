@@ -1,4 +1,4 @@
-package com.gzella.realworld.persistence.entity.user;
+package com.gzella.realworld.persistence.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -28,6 +28,10 @@ public class User implements UserDetails {
     private String username;
     private String bio = "";
     private String image;
+    @OneToMany(mappedBy="to")
+    private List<Follower> followers;
+    @OneToMany(mappedBy="from")
+    private List<Follower> following;
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -43,7 +47,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return email;
+        return username;
     }
 
     @Override
@@ -65,4 +69,5 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
 }
