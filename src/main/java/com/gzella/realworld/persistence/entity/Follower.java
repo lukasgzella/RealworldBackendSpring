@@ -1,7 +1,13 @@
 package com.gzella.realworld.persistence.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class Follower {
 
@@ -16,8 +22,6 @@ public class Follower {
     @ManyToOne
     @JoinColumn(name="to_user_fk")
     private User to;
-
-    public Follower() {};
 
     public Follower(User from, User to) {
         this.from = from;

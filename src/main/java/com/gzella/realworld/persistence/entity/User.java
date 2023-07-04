@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Builder
@@ -29,9 +30,9 @@ public class User implements UserDetails {
     private String bio = "";
     private String image;
     @OneToMany(mappedBy="to")
-    private List<Follower> followers;
+    private Set<Follower> followers;
     @OneToMany(mappedBy="from")
-    private List<Follower> following;
+    private Set<Follower> following;
     @Enumerated(EnumType.STRING)
     private Role role;
 

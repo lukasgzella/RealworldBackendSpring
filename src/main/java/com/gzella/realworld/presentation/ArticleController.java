@@ -2,6 +2,7 @@ package com.gzella.realworld.presentation;
 
 import com.gzella.realworld.business.dto.responses.LoginResponse;
 import com.gzella.realworld.business.dto.responses.ProfileResponse;
+import com.gzella.realworld.persistence.entity.Article;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,10 +15,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ArticleController {
 
-    //    auth optional, return Profile
-    @GetMapping("/api/articles/{username}")
-    public ResponseEntity<List<Article>> getProfile(@PathVariable("username") String username) {
+    //    Authentication optional, will return multiple articles, ordered by most recent first
+    @GetMapping("/api/articles")
+    public ResponseEntity<List<Article>> getArticles(@PathVariable("username") String username) {
         return ResponseEntity.ok(profileService.getProfile(username));
     }
 
+    //   permitAll, will return single article
+    @GetMapping("/api/articles/:slug")
+    public ResponseEntity<List<Article>> getArticles(@PathVariable("username") String username) {
+        return ResponseEntity.ok(profileService.getProfile(username));
+    }
 }

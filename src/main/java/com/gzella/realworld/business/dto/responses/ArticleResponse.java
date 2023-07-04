@@ -1,9 +1,7 @@
-package com.gzella.realworld.persistence.entity;
+package com.gzella.realworld.business.dto.responses;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonRootName;
+import com.gzella.realworld.persistence.entity.Author;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,15 +11,11 @@ import java.util.List;
 
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "articles")
-public class Article {
+@NoArgsConstructor
+@JsonRootName("article")
+public class ArticleResponse {
 
-    @Id
-    @GeneratedValue
-    private Long id;
     private String slug;
     private String title;
     private String description;
