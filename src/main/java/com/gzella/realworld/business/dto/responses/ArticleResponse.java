@@ -13,7 +13,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonRootName("article")
+//@JsonRootName("article")
 public class ArticleResponse {
 
     private String slug;
