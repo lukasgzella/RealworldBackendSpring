@@ -2,7 +2,6 @@ package com.gzella.realworld.business.service;
 
 import com.gzella.realworld.business.dto.responses.ProfileResponse;
 import com.gzella.realworld.persistence.entity.Follower;
-import com.gzella.realworld.persistence.entity.User;
 import com.gzella.realworld.persistence.repository.FollowerRepository;
 import com.gzella.realworld.persistence.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package com.gzella.realworld.persistence.entity;
+package com.gzella.realworld.business.dto;
 
 public class Author {
 
@@ -6,4 +6,5 @@ public class Author {
     private String bio;
     private String image;
     private boolean following;
+
 }

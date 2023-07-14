@@ -1,12 +1,10 @@
 package com.gzella.realworld.presentation;
 
-import com.gzella.realworld.business.dto.ArticleQueryParams;
 import com.gzella.realworld.business.dto.responses.ArticleResponse;
 import com.gzella.realworld.business.dto.responses.MultipleArticleResponse;
 import com.gzella.realworld.business.service.ArticleService;
 import com.gzella.realworld.persistence.entity.Article;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,18 +26,15 @@ public class ArticleController {
             @RequestParam(value = "limit", required = false, defaultValue = "20") int limit,
             @RequestParam(value = "offset", required = false, defaultValue = "0") int offset
     ) {
-//        ArticleQueryParams params = new ArticleQueryParams(tag, author, favorited, limit, offset);
-        MultipleArticleResponse response = articleService.getArticles(tag, author, favorited, limit, offset);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(articleService.getArticles(tag, author, favorited, limit, offset));
     }
-
-
 
     //   permitAll, will return single article
     @GetMapping("/api/articles/{slug}")
-    public ResponseEntity<ArticleResponse> getArticle(@PathVariable("slug") String slug) {
-        return ResponseEntity.ok(articleService.getArticle(slug));
+    public ResponseEntity<Map<String,ArticleResponse>> getArticle(@PathVariable("slug") String slug) {
+        return ResponseEntity.ok(Map.of("article", articleService.getArticle(slug)));
     }
+
 
 
 
@@ -47,9 +42,17 @@ public class ArticleController {
     //   Authentication required, will return multiple articles created by followed users,
     //   ordered by most recent first.
     @GetMapping("/api/articles/feed")
-    public ResponseEntity<List<Article>> feedArticles(@PathVariable("username") String username) {
-        return ResponseEntity.ok(profileService.getProfile(username));
+    public ResponseEntity<MultipleArticleResponse> feedArticles(
+            @RequestParam(value = "limit", required = false, defaultValue = "20") int limit,
+            @RequestParam(value = "offset", required = false, defaultValue = "0") int offset
+    ) {
+        return ResponseEntity.ok(articleService.getArticles(limit, offset));
     }
+
+
+
+
+
 
     //   Authentication required, will return multiple articles created by followed users,
     //   ordered by most recent first.

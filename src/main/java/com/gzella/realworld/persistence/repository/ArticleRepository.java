@@ -1,12 +1,14 @@
 package com.gzella.realworld.persistence.repository;
 
-import com.gzella.realworld.business.dto.ArticleQueryParams;
 import com.gzella.realworld.persistence.entity.Article;
+import com.gzella.realworld.business.dto.Author;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
+
+import java.util.Collection;
 
 public interface ArticleRepository extends CrudRepository<Article, Long> {
 
@@ -24,5 +26,6 @@ public interface ArticleRepository extends CrudRepository<Article, Long> {
             @Param("favorited") String favorited,
             Pageable pageable
     );
+    Page<Article> findByAuthorOrderByCreatedAtDesc(Collection<Author> authors, Pageable pageable);
     Article findBySlug(String slug);
 }

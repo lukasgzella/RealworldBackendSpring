@@ -8,6 +8,6 @@ import java.util.List;
 public class MultipleArticleResponse {
 
     private List<ArticleResponse> articles;
-    private int articlesCount;
+    private long articlesCount;
 
 }

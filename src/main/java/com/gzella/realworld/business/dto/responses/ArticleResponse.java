@@ -1,7 +1,6 @@
 package com.gzella.realworld.business.dto.responses;
 
-import com.fasterxml.jackson.annotation.JsonRootName;
-import com.gzella.realworld.persistence.entity.Author;
+import com.gzella.realworld.business.dto.Author;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,7 +12,6 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-//@JsonRootName("article")
 public class ArticleResponse {
 
     private String slug;

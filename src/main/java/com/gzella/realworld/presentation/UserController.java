@@ -1,5 +1,6 @@
 package com.gzella.realworld.presentation;
 
+import com.gzella.realworld.business.service.AuthenticationService;
 import com.gzella.realworld.business.service.UserService;
 import com.gzella.realworld.business.dto.responses.LoginResponse;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     private final UserService userService;
+    private final AuthenticationService authenticationService;
 
     //    auth optional, return Profile
     @GetMapping("/api/profiles/{username}")

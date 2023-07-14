@@ -33,6 +33,8 @@ public class User implements UserDetails {
     private Set<Follower> followers;
     @OneToMany(mappedBy="from")
     private Set<Follower> following;
+    @OneToMany(mappedBy = "author")
+    private Set<Article> articles;
     @Enumerated(EnumType.STRING)
     private Role role;
 

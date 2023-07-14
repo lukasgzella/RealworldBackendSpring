@@ -1,6 +1,5 @@
 package com.gzella.realworld.persistence.repository;
 
-import com.gzella.realworld.persistence.entity.User;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.Optional;

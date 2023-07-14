@@ -1,9 +1,7 @@
 package com.gzella.realworld.persistence.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.gzella.realworld.business.dto.Author;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,6 +19,7 @@ public class Article {
 
     @Id
     @GeneratedValue
+    @Column(name = "article_id")
     private Long id;
     private String slug;
     private String title;
@@ -31,6 +30,10 @@ public class Article {
     private String updatedAt;
     private boolean favorited;
     private String favoritesCount;
-    private Author author;
+    @ManyToOne
+    @JoinColumn(name="user_id", nullable = false)
+    private User author;
+
+//    todo make parallel hibernate app to illustrate coupling between entities and test it how it works!
 
 }
