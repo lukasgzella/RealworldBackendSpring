@@ -1,4 +1,4 @@
-package com.gzella.realworld.business.service;
+package com.gzella.realworld.business.auxiliary;
 
 import com.gzella.realworld.business.dto.responses.ArticleResponse;
 import com.gzella.realworld.persistence.entity.Article;

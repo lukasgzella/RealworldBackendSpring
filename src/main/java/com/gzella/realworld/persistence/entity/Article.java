@@ -1,19 +1,18 @@
 package com.gzella.realworld.persistence.entity;
 
-import com.gzella.realworld.business.dto.Author;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@EqualsAndHashCode
 @Table(name = "articles")
 public class Article {
 
@@ -29,11 +28,14 @@ public class Article {
     private String createdAt;
     private String updatedAt;
     private boolean favorited;
-    private String favoritesCount;
+    private long favoritesCount;
     @ManyToOne
-    @JoinColumn(name="user_id", nullable = false)
+    @JoinColumn(name="user_id")
     private User author;
-
-//    todo make parallel hibernate app to illustrate coupling between entities and test it how it works!
+    @Builder.Default
+    @ManyToMany(mappedBy = "favoriteArticles")
+    private Set<User> followingUsers = new HashSet<>();
+    @OneToMany(mappedBy = "article")
+    private List<Comment> comments;
 
 }

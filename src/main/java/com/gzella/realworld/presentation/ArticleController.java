@@ -17,6 +17,7 @@ public class ArticleController {
 
     private final ArticleService articleService;
 
+    //    List Articles
     //    Authentication optional, will return multiple articles, ordered by most recent first
     @GetMapping("/api/articles")
     public ResponseEntity<MultipleArticleResponse> getArticles(
@@ -29,16 +30,7 @@ public class ArticleController {
         return ResponseEntity.ok(articleService.getArticles(tag, author, favorited, limit, offset));
     }
 
-    //   permitAll, will return single article
-    @GetMapping("/api/articles/{slug}")
-    public ResponseEntity<Map<String,ArticleResponse>> getArticle(@PathVariable("slug") String slug) {
-        return ResponseEntity.ok(Map.of("article", articleService.getArticle(slug)));
-    }
-
-
-
-
-
+    //     Feed Articles
     //   Authentication required, will return multiple articles created by followed users,
     //   ordered by most recent first.
     @GetMapping("/api/articles/feed")
@@ -49,11 +41,15 @@ public class ArticleController {
         return ResponseEntity.ok(articleService.getArticles(limit, offset));
     }
 
+    //      Get Article
+    //   permitAll, will return single article
+    @GetMapping("/api/articles/{slug}")
+    public ResponseEntity<Map<String, ArticleResponse>> getArticle(@PathVariable("slug") String slug) {
+        return ResponseEntity.ok(Map.of("article", articleService.getArticle(slug)));
+    }
 
 
-
-
-
+    //      Create Article
     //   Authentication required, will return multiple articles created by followed users,
     //   ordered by most recent first.
     @PostMapping("/api/articles")
@@ -61,6 +57,7 @@ public class ArticleController {
         return ResponseEntity.ok(profileService.getProfile(username));
     }
 
+    //      Update Article
     //   Authentication required, will return multiple articles created by followed users,
     //   ordered by most recent first.
     @PutMapping("/api/articles/:slug")
@@ -68,6 +65,42 @@ public class ArticleController {
         return ResponseEntity.ok(profileService.getProfile(username));
     }
 
+    //      Delete Article
+    //  Auth required
+    @DeleteMapping("/api/articles/:slug")
+    public ResponseEntity<List<Article>> deleteArticle(@PathVariable("username") String username) {
+        return ResponseEntity.ok(profileService.getProfile(username));
+    }
+
+    //  Add Comments to an Article
+    //  Auth required
+    @DeleteMapping("/api/articles/:slug")
+    public ResponseEntity<List<Article>> deleteArticle(@PathVariable("username") String username) {
+        return ResponseEntity.ok(profileService.getProfile(username));
+    }
+
+    //    Get Comments from an Article
+    //  Auth required
+    @DeleteMapping("/api/articles/:slug")
+    public ResponseEntity<List<Article>> deleteArticle(@PathVariable("username") String username) {
+        return ResponseEntity.ok(profileService.getProfile(username));
+    }
+
+    //    Delete Comment
+    //  Auth required
+    @DeleteMapping("/api/articles/:slug")
+    public ResponseEntity<List<Article>> deleteArticle(@PathVariable("username") String username) {
+        return ResponseEntity.ok(profileService.getProfile(username));
+    }
+
+    //    Favorite Article
+    //  Auth required
+    @DeleteMapping("/api/articles/:slug")
+    public ResponseEntity<List<Article>> deleteArticle(@PathVariable("username") String username) {
+        return ResponseEntity.ok(profileService.getProfile(username));
+    }
+
+    //    Unfavorite Article
     //  Auth required
     @DeleteMapping("/api/articles/:slug")
     public ResponseEntity<List<Article>> deleteArticle(@PathVariable("username") String username) {
