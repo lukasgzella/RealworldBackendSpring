@@ -6,6 +6,7 @@ import com.gzella.realworld.business.dto.responses.ArticleResponse;
 import com.gzella.realworld.business.dto.responses.MultipleArticleResponse;
 import com.gzella.realworld.persistence.entity.Article;
 import com.gzella.realworld.persistence.entity.Follower;
+import com.gzella.realworld.persistence.entity.User;
 import com.gzella.realworld.persistence.repository.ArticleRepository;
 import com.gzella.realworld.persistence.repository.FollowerRepository;
 import com.gzella.realworld.persistence.repository.UserRepository;
@@ -26,6 +27,9 @@ public class ArticleService {
     private final FollowerRepository followerRepository;
     private final ArticleRepository articleRepository;
 
+    public ArticleService() {
+    }
+
     public ArticleResponse getArticle(String slug) {
         // get article from art-repo
         Article article = articleRepository.findBySlug(slug);
@@ -45,7 +49,7 @@ public class ArticleService {
         // get followed users.
         User authenticatedUser = userRepository.findByUsername(authenticationFacade.getAuthentication().getName()).orElseThrow();
         Set<Follower> following = authenticatedUser.getFollowing();
-        Page<Article> page = articleRepository.findByParams(PageRequest.of(offset, limit));
+        Page<Article> page = articleRepository.findByFollowedUsers(PageRequest.of(offset, limit));
         long articlesCount = page.getTotalElements();
         // map to response
         List<ArticleResponse> articles = page.map(article -> new ArticleResponseMapper().apply(article)).toList();

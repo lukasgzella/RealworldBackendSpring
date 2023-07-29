@@ -24,7 +24,6 @@ public class Article {
     private String title;
     private String description;
     private String body;
-    private List<String> tagList;
     private String createdAt;
     private String updatedAt;
     private boolean favorited;
@@ -37,5 +36,7 @@ public class Article {
     private Set<User> followingUsers = new HashSet<>();
     @OneToMany(mappedBy = "article")
     private List<Comment> comments;
+    @OneToMany(mappedBy = "article")
+    private Set<Tag> tagList;
 
 }
