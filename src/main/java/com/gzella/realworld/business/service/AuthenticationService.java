@@ -6,6 +6,7 @@ import com.gzella.realworld.business.dto.requests.RegistrationRequest;
 import com.gzella.realworld.business.dto.requests.UpdateRequest;
 import com.gzella.realworld.business.dto.responses.LoginResponse;
 import com.gzella.realworld.persistence.entity.Role;
+import com.gzella.realworld.persistence.entity.User;
 import com.gzella.realworld.persistence.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,8 +24,6 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
-
-    // ACCORDING TO SPEC:
 
     public LoginResponse login(LoginRequest request) {
         authenticationManager.authenticate(

@@ -15,7 +15,7 @@ public interface ArticleRepository extends CrudRepository<Article, Long> {
     @Query(
             """
                     SELECT a FROM Article a
-                    WHERE (:tag IS NULL OR :tag IN (SELECT t.tag.name FROM a.includeTags t))
+                    WHERE (:tag IS NULL OR :tag IN (SELECT t.tag.name FROM a.tagList t))
                     AND (:author IS NULL OR a.author.username = :author)
                     AND (:favorited IS NULL OR :favorited IN (SELECT fu.user.username FROM a.favoriteUsers fu))
                     ORDER BY a.createdAt DESC
@@ -31,12 +31,11 @@ public interface ArticleRepository extends CrudRepository<Article, Long> {
             """
                     SELECT a FROM Article a
                     WHERE (:tag IS NULL OR :tag IN (SELECT t.tag.name FROM a.includeTags t))
-                    AND (:author IS NULL OR a.author.username = :author)
-                    AND (:favorited IS NULL OR :favorited IN (SELECT fu.user.username FROM a.favoriteUsers fu))
+                    WHERE :author IS NULL OR a.author.id = :author
                     ORDER BY a.createdAt DESC
                     """)
     Page<Article> findByFollowedUsers(
-            @Param("author") String author,
+            @Param("author_id") String author_id,
             Pageable pageable
     );
     Page<Article> findByAuthorOrderByCreatedAtDesc(Collection<Author> authors, Pageable pageable);

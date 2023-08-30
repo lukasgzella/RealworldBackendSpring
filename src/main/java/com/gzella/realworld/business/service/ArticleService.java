@@ -49,7 +49,7 @@ public class ArticleService {
         // get followed users.
         User authenticatedUser = userRepository.findByUsername(authenticationFacade.getAuthentication().getName()).orElseThrow();
         Set<Follower> following = authenticatedUser.getFollowing();
-        Page<Article> page = articleRepository.findByFollowedUsers(PageRequest.of(offset, limit));
+        Page<Article> page = articleRepository.findByFollowedUsers(following, PageRequest.of(offset, limit));
         long articlesCount = page.getTotalElements();
         // map to response
         List<ArticleResponse> articles = page.map(article -> new ArticleResponseMapper().apply(article)).toList();

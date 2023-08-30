@@ -16,16 +16,22 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProfileService {
 
     @Autowired
-    private IAuthenticationFacade authenticationFacade;
+    private final IAuthenticationFacade authenticationFacade;
     private final UserRepository userRepository;
     private final FollowerRepository followerRepository;
 
+    @Transactional
     public ProfileResponse getProfile(String username) {
-        // get user from repo and map it to profile response todo
+        // todo exception no such user
         User previewUser = userRepository.findByUsername(username).orElseThrow();
-        User authenticatedUser = userRepository.findByUsername(authenticationFacade.getAuthentication().getName()).orElseThrow();
-        boolean isFollowing = authenticatedUser.getFollowing().stream()
-                .anyMatch(f -> f.getTo().getUsername().equals(username));
+        String authenticatedUsername = authenticationFacade.getAuthentication().getName();
+        User authenticatedUser;
+        boolean isFollowing = false;
+        if (authenticatedUsername != null) {
+            authenticatedUser = userRepository.findByUsername(authenticatedUsername).orElseThrow();
+            isFollowing = authenticatedUser.getFollowing().stream()
+                    .anyMatch(f -> f.getTo().getUsername().equals(username));
+        }
         return ProfileResponse.builder()
                 .username(previewUser.getUsername())
                 .bio(previewUser.getBio())
