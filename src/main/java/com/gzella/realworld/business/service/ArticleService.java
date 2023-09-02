@@ -27,8 +27,6 @@ public class ArticleService {
     private final FollowerRepository followerRepository;
     private final ArticleRepository articleRepository;
 
-    public ArticleService() {
-    }
 
     public ArticleResponse getArticle(String slug) {
         // get article from art-repo

@@ -23,64 +23,65 @@ public class ProfileService {
     @Transactional
     public ProfileResponse getProfile(String username) {
         // todo exception no such user
-        User previewUser = userRepository.findByUsername(username).orElseThrow();
-        String authenticatedUsername = authenticationFacade.getAuthentication().getName();
-        User authenticatedUser;
+        User userTo = userRepository.findByUsername(username).orElseThrow();
+        String usernameFrom = authenticationFacade.getAuthentication().getName();
         boolean isFollowing = false;
-        if (authenticatedUsername != null) {
-            authenticatedUser = userRepository.findByUsername(authenticatedUsername).orElseThrow();
-            isFollowing = authenticatedUser.getFollowing().stream()
-                    .anyMatch(f -> f.getTo().getUsername().equals(username));
+        if (usernameFrom != null) {
+            isFollowing = followerRepository.existsByFromTo(usernameFrom, username);
         }
         return ProfileResponse.builder()
-                .username(previewUser.getUsername())
-                .bio(previewUser.getBio())
-                .image(previewUser.getImage())
+                .username(userTo.getUsername())
+                .bio(userTo.getBio())
+                .image(userTo.getImage())
                 .following(isFollowing)
                 .build();
     }
 
     @Transactional
     public ProfileResponse followUser(String username) {
-        // get user from repo, get authenticated user from repo, add follower to followers list, add follower
-        // to following list. all should be in transaction, return ProfileRes.
-        // check if already follow todo (changed list to set)
-        User previewUser = userRepository.findByUsername(username).orElseThrow();
-        User authenticatedUser = userRepository.findByUsername(authenticationFacade.getAuthentication().getName()).orElseThrow();
-        Follower follower = new Follower(authenticatedUser, previewUser);
-        follower = followerRepository.save(follower);
-        previewUser.getFollowers().add(follower);
-        authenticatedUser.getFollowing().add(follower);
-        userRepository.save(previewUser);
-        userRepository.save(authenticatedUser);
-        return ProfileResponse.builder()
-                .username(previewUser.getUsername())
-                .bio(previewUser.getBio())
-                .image(previewUser.getImage())
+        User userTo = userRepository.findByUsername(username).orElseThrow();
+        ProfileResponse res = ProfileResponse.builder()
+                .username(userTo.getUsername())
+                .bio(userTo.getBio())
+                .image(userTo.getImage())
                 .following(true)
                 .build();
+        String usernameFrom = authenticationFacade.getAuthentication().getName();
+        boolean isFollowing = followerRepository.existsByFromTo(usernameFrom, username);
+        if (isFollowing) {
+            return res;
+        }
+        User userFrom = userRepository.findByUsername(usernameFrom).orElseThrow();
+        Follower follower = new Follower(userFrom, userTo);
+        follower = followerRepository.save(follower);
+        userTo.getFollowers().add(follower);
+        userFrom.getFollowing().add(follower);
+        userRepository.save(userTo);
+        userRepository.save(userFrom);
+        return res;
     }
 
     @Transactional
     public ProfileResponse unfollowUser(String username) {
-        // get user from repo, get authenticated user from repo, remove follower from followers set, rem follower
-        // from following set. all should be in transaction, return ProfileRes.
-        User previewUser = userRepository.findByUsername(username).orElseThrow();
-        User authenticatedUser = userRepository.findByUsername(authenticationFacade.getAuthentication().getName()).orElseThrow();
-        Follower follower = authenticatedUser.getFollowing().stream()
-                .filter(f -> f.getTo().getUsername().equals(username))
-                .findFirst()
-                .get(); // todo handle NPE
-        authenticatedUser.getFollowing().remove(follower);
-        previewUser.getFollowers().remove(follower);
-        followerRepository.delete(follower);
-        userRepository.save(previewUser);
-        userRepository.save(authenticatedUser);
-        return ProfileResponse.builder()
-                .username(previewUser.getUsername())
-                .bio(previewUser.getBio())
-                .image(previewUser.getImage())
+        User userTo = userRepository.findByUsername(username).orElseThrow();
+        ProfileResponse res = ProfileResponse.builder()
+                .username(userTo.getUsername())
+                .bio(userTo.getBio())
+                .image(userTo.getImage())
                 .following(false)
                 .build();
+        String usernameFrom = authenticationFacade.getAuthentication().getName();
+        boolean isFollowing = followerRepository.existsByFromTo(usernameFrom, username);
+        if (!isFollowing) {
+            return res;
+        }
+        User userFrom = userRepository.findByUsername(usernameFrom).orElseThrow();
+        Follower follower = followerRepository.findByFromTo(usernameFrom, username).get();
+        userFrom.getFollowing().remove(follower);
+        userTo.getFollowers().remove(follower);
+        followerRepository.delete(follower);
+        userRepository.save(userTo);
+        userRepository.save(userFrom);
+        return res;
     }
 }

@@ -39,5 +39,6 @@ public interface ArticleRepository extends CrudRepository<Article, Long> {
             Pageable pageable
     );
     Page<Article> findByAuthorOrderByCreatedAtDesc(Collection<Author> authors, Pageable pageable);
+
     Article findBySlug(String slug);
 }

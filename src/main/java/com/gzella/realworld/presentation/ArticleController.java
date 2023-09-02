@@ -21,7 +21,7 @@ public class ArticleController {
     //    List Articles
     //    Authentication optional, will return multiple articles, ordered by most recent first
     @GetMapping
-    public ResponseEntity<MultipleArticleResponse> getArticles(
+    public ResponseEntity<MultipleArticleResponse> listArticles(
             @RequestParam(value = "tag", required = false) String tag,
             @RequestParam(value = "author", required = false) String author,
             @RequestParam(value = "favorited", required = false) String favorited,
@@ -31,7 +31,7 @@ public class ArticleController {
         return ResponseEntity.ok(articleService.getArticles(tag, author, favorited, limit, offset));
     }
 
-    //     Feed Articles
+    //   Feed Articles
     //   Authentication required, will return multiple articles created by followed users,
     //   ordered by most recent first.
     @GetMapping("/feed")
