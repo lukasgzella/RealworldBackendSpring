@@ -36,9 +36,8 @@ public class ArticleService {
 
 
     public MultipleArticleResponse getArticles(String tag, String author, String favorited, int limit, int offset) {
-        Page<Article> page = articleRepository.findByParams(tag, author, favorited, PageRequest.of(offset, limit));
-        long articlesCount = page.getTotalElements();
-        // map to response
+        Page<Article> page = articleRepository.findArticlesByParamsPage(author, tag, favorited, PageRequest.of(offset, limit));
+        long articlesCount = articleRepository.countArticlesByParams(author, tag, favorited);
         List<ArticleResponse> articles = page.map(article -> new ArticleResponseMapper().apply(article)).toList();
         return new MultipleArticleResponse(articles, articlesCount);
     }
