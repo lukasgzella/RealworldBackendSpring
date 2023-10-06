@@ -16,6 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Scanner;
 import java.util.Set;
 
 @Service
@@ -40,6 +41,17 @@ public class ArticleService {
         long articlesCount = articleRepository.countArticlesByParams(author, tag, favorited);
         List<ArticleResponse> articles = page.map(article -> new ArticleResponseMapper().apply(article)).toList();
         return new MultipleArticleResponse(articles, articlesCount);
+    }
+
+    public MultipleArticleResponse feedArticles(int limit, int offset) {
+        User authenticatedUser = userRepository.findByUsername(authenticationFacade.getAuthentication().getName()).orElseThrow();
+        List<Article> articles = articleRepository.findByFollowingUser(authenticatedUser.getId(), PageRequest.of(offset, limit));
+        List<ArticleResponse> articleResponses = articles.stream().
+                map(article -> new ArticleResponseMapper()
+                        .apply(article))
+                .toList();
+        var multi = new MultipleArticleResponse(articleResponses, articles.size());
+        System.out.println(multi);
     }
 
     public MultipleArticleResponse getArticlesFromFollowedUsers(int limit, int offset) {
