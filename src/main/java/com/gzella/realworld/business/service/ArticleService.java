@@ -55,11 +55,10 @@ public class ArticleService {
     }
 
     public MultipleArticleResponse getArticlesFromFollowedUsers(int limit, int offset) {
-        // get followed users.
         User authenticatedUser = userRepository.findByUsername(authenticationFacade.getAuthentication().getName()).orElseThrow();
         Set<Follower> following = authenticatedUser.getFollowing();
-        Page<Article> page = articleRepository.findByFollowedUsers(following, PageRequest.of(offset, limit));
-        long articlesCount = page.getTotalElements();
+        Page<Article> page = articleRepository.findByFollowingUser(String.valueOf(authenticatedUser.getId()), PageRequest.of(offset, limit));
+        long articlesCount = articleRepository.countArticlesByParams();
         // map to response
         List<ArticleResponse> articles = page.map(article -> new ArticleResponseMapper().apply(article)).toList();
         return new MultipleArticleResponse(articles, articlesCount);
