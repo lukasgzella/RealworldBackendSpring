@@ -79,7 +79,15 @@ public interface ArticleRepository extends CrudRepository<Article, Long> {
             SELECT a FROM Article a
             WHERE a.author.id IN (SELECT f.to.id FROM Follower f WHERE f.from.id = :user_id)
             """)
-    Page <Article> findByFollowingUser(@Param("user_id") String user_id, Pageable pageable);
+    Page<Article> findArticlesFromFavoritesUsers(@Param("user_id") String user_id, Pageable pageable);
+
+    @Query("""
+            SELECT COUNT(*) a FROM Article a
+            WHERE a.author.id IN (SELECT f.to.id FROM Follower f WHERE f.from.id = :user_id)
+            """)
+    long countArticlesFromFavoritesUsers(
+            @Param("user_id") String user_id
+    );
 
     Optional<Article> findBySlug(String slug);
 
