@@ -15,12 +15,17 @@ public class ArticleResponseMapper implements Function<Article, ArticleResponse>
                 .title(article.getTitle())
                 .description(article.getDescription())
                 .body(article.getBody())
-                .tagList(article.getTagList())
+                .tagList(article.getTagList().stream().map(Tag::getName).toList())
                 .createdAt(article.getCreatedAt())
                 .updatedAt(article.getUpdatedAt())
                 .favorited(article.isFavorited())
-                .favoritesCount(article.getFavoritesCount())
-                .author(article.getAuthor())
+                .favoritesCount(article.getFollowingUsers().size()) // followingUsers Hashset.size()
+                .author(new Author(
+                        article.getAuthor().getUsername(),
+                        article.getAuthor().getBio(),
+                        article.getAuthor().getImage(),
+                        article.isFollowing()
+                ))
                 .build();
     }
 }
