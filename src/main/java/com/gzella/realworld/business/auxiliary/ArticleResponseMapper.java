@@ -1,10 +1,10 @@
 package com.gzella.realworld.business.auxiliary;
 
+import com.gzella.realworld.business.dto.Author;
 import com.gzella.realworld.business.dto.responses.ArticleResponse;
 import com.gzella.realworld.persistence.entity.Article;
-import org.springframework.data.domain.Page;
+import com.gzella.realworld.persistence.entity.Tag;
 
-import java.util.List;
 import java.util.function.Function;
 
 public class ArticleResponseMapper implements Function<Article, ArticleResponse> {
