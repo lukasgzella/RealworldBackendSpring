@@ -32,7 +32,16 @@ public class ArticleService {
 
     public ArticleResponse getArticle(String slug) {
         // get article from art-repo
-        Article article = articleRepository.findBySlug(slug);
+        Article article = articleRepository.findBySlug(slug).orElseThrow();
+        User authenticated = checkIfAuthenticated();
+        boolean favorited = false;
+        boolean following = false;
+        if (authenticated != null) {
+            favorited = isFavorited(article, authenticated);
+            following = isFollowing(authenticated, article.getAuthor());
+        }
+        article.setFavorited(favorited);
+        article.setFollowing(following);
         return new ArticleResponseMapper().apply(article);
     }
 
@@ -53,5 +62,18 @@ public class ArticleService {
         // map to response
         List<ArticleResponse> articles = page.map(article -> new ArticleResponseMapper().apply(article)).toList();
         return new MultipleArticleResponse(articles, articlesCount);
+    }
+
+    private User checkIfAuthenticated() {
+        String username = authenticationFacade.getAuthentication().getName();
+        return userRepository.findByUsername(username).orElse(null);
+    }
+
+    private boolean isFavorited(Article article, User authenticated) {
+        return authenticated.getFavoriteArticles().contains(article);
+    }
+
+    private boolean isFollowing(User userFrom, User userTo) {
+        return followerRepository.existsByFromTo(userFrom.getUsername(), userTo.getUsername());
     }
 }
