@@ -59,7 +59,7 @@ public class ArticleController {
             @RequestParam(value = "limit", required = false, defaultValue = "20") int limit,
             @RequestParam(value = "offset", required = false, defaultValue = "0") int offset
     ) {
-        return ResponseEntity.ok(articleService.getArticlesFromFollowedUsers(limit, offset));
+        return ResponseEntity.ok(articleService.createArticle(););
     }
 
     //      Update Article

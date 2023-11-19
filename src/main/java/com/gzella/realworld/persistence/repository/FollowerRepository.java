@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.Optional;
 
 
-public interface FollowerRepository extends CrudRepository<Follower, Long> {
+public interface    FollowerRepository extends CrudRepository<Follower, Long> {
 
     @Query("""
             SELECT f FROM Follower f

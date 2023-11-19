@@ -16,9 +16,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -75,5 +78,42 @@ public class ArticleService {
 
     private boolean isFollowing(User userFrom, User userTo) {
         return followerRepository.existsByFromTo(userFrom.getUsername(), userTo.getUsername());
+    }
+
+    public void createArticle() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Current user_id? ");
+        String userId = scanner.nextLine();
+        User user = userRepository.findById(Long.parseLong(userId));
+        System.out.println("title?");
+        String title = scanner.nextLine();
+        System.out.println("description?");
+        String description = scanner.nextLine();
+        System.out.println("body?");
+        String body = scanner.nextLine();
+        System.out.println("taglist? Enter tags separated by spaces");
+        List<String> stringList = Arrays.stream(scanner.nextLine().split("\s")).toList();
+        // create new article with id
+        Article savedArticle = articleRepository.save(Article.builder()
+                .author(user)
+                .title(title)
+                .slug(title.toLowerCase().replace(' ', '-'))
+                .description(description)
+                .body(body)
+                .createdAt(LocalDateTime.now().toString())
+                .build());
+        // check if there are existing tags with name from stringList in tagRepository
+        Set<Tag> existingTags = stringList
+                .stream()
+                .map(s -> tagRepository.findByName(s)
+                        .orElseGet(() -> new Tag(s))).collect(Collectors.toSet());
+        // update tags with savedArticle
+        existingTags.forEach(tag -> tag.getArticles().add(savedArticle));
+        existingTags = existingTags.stream().map(tagRepository::save).collect(Collectors.toSet());
+
+        savedArticle.setTagList(existingTags);
+        articleRepository.save(savedArticle);
+        ArticleResponse res = new ArticleResponseMapper().apply(savedArticle);
+        System.out.println(res);
     }
 }
