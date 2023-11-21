@@ -80,7 +80,7 @@ public class ArticleService {
         return followerRepository.existsByFromTo(userFrom.getUsername(), userTo.getUsername());
     }
 
-    public void createArticle() {
+    public ArticleResponse createArticle() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Current user_id? ");
         String userId = scanner.nextLine();
